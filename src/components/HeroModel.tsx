@@ -7,10 +7,9 @@ export function HeroModel() {
   const meshRef = useRef<THREE.Mesh>(null);
   const scroll = useScroll();
 
-  useFrame((state, delta) => {
+  useFrame((_state, delta) => {
     if (!meshRef.current) return;
 
-    const r1 = scroll.range(0, 1 / 4);
     const r2 = scroll.range(1 / 4, 1 / 4);
     const r3 = scroll.range(2 / 4, 1 / 4);
     const r4 = scroll.range(3 / 4, 1 / 4);
@@ -46,7 +45,6 @@ export function HeroModel() {
     // Rotation interpolation
     let targetRotX = 0;
     let targetRotY = meshRef.current.rotation.y; // Keep base rotation
-    let targetRotZ = 0;
 
     if (r2 > 0 && r3 === 0) {
       targetRotY += THREE.MathUtils.lerp(0, Math.PI / 2, r2);
