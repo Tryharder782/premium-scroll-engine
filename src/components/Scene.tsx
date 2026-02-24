@@ -1,5 +1,5 @@
 import { Canvas } from '@react-three/fiber';
-import { Environment, ScrollControls } from '@react-three/drei';
+import { ScrollControls } from '@react-three/drei';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
 import { ParticleVortex } from './ParticleVortex';
 import { Overlay } from './Overlay';
@@ -22,7 +22,7 @@ export function Scene() {
       </ScrollControls>
 
       {/* Post-processing for the SaaS Glow */}
-      <EffectComposer disableNormalPass>
+      <EffectComposer>
         <Bloom 
           luminanceThreshold={0.2} 
           mipmapBlur 

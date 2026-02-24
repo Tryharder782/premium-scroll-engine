@@ -172,27 +172,19 @@ export function ParticleVortex({ count = 15000 }) {
       <bufferGeometry>
         <bufferAttribute
           attach="attributes-position"
-          count={count}
-          array={positions}
-          itemSize={3}
+          args={[positions, 3]}
         />
         <bufferAttribute
           attach="attributes-aSize"
-          count={count}
-          array={sizes}
-          itemSize={1}
+          args={[sizes, 1]}
         />
         <bufferAttribute
           attach="attributes-aSpeed"
-          count={count}
-          array={speeds}
-          itemSize={1}
+          args={[speeds, 1]}
         />
         <bufferAttribute
           attach="attributes-aOffset"
-          count={count}
-          array={offsets}
-          itemSize={1}
+          args={[offsets, 1]}
         />
       </bufferGeometry>
       <shaderMaterial
