@@ -36,9 +36,9 @@ const vertexShader = `
     pos.y = sin(angle) * radius;
     
     // Tunnel movement: move particles along Z axis
-    // Base speed + scroll speed multiplier
-    float zSpeed = aSpeed * 5.0 + uScrollSpeed * 50.0;
-    float zOffset = mod(pos.z + uTime * zSpeed, 50.0) - 25.0;
+    // We use uScrollSpeed as an offset, not a multiplier for time, to avoid the "jumping" effect
+    float zSpeed = aSpeed * 5.0;
+    float zOffset = mod(pos.z + uTime * zSpeed + uScrollSpeed, 50.0) - 25.0;
     pos.z = zOffset;
     
     // Mouse interaction: subtle tilt/bend based on mouse position
@@ -140,16 +140,17 @@ export function ParticleVortex({ count = 15000 }) {
       const scrollDelta = currentOffset - lastScrollOffset.current;
       
       // Only accelerate when scrolling down (positive delta)
-      // Add a base speed and damp it so it smoothly returns to 0
-      const targetSpeed = Math.max(0, scrollDelta * 100);
+      // We accumulate the scroll delta into the uniform to act as a continuous offset
+      const targetSpeed = Math.max(0, scrollDelta * 150);
       currentScrollSpeed.current = THREE.MathUtils.damp(
         currentScrollSpeed.current,
         targetSpeed,
-        4,
+        2, // Lower damping factor for smoother deceleration
         delta
       );
       
-      materialRef.current.uniforms.uScrollSpeed.value = currentScrollSpeed.current;
+      // Accumulate the speed into the uniform to move particles forward
+      materialRef.current.uniforms.uScrollSpeed.value += currentScrollSpeed.current;
       lastScrollOffset.current = currentOffset;
 
       // Smoothly interpolate mouse position for fluid interaction
