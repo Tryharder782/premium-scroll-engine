@@ -1,30 +1,35 @@
 import { Canvas } from '@react-three/fiber';
-import { Environment, ContactShadows, ScrollControls } from '@react-three/drei';
-import { HeroModel } from './HeroModel';
+import { Environment, ScrollControls } from '@react-three/drei';
+import { EffectComposer, Bloom } from '@react-three/postprocessing';
+import { ParticleVortex } from './ParticleVortex';
 import { Overlay } from './Overlay';
 
 export function Scene() {
   return (
-    <Canvas shadows camera={{ position: [0, 0, 8], fov: 45 }}>
+    <Canvas 
+      camera={{ position: [0, 0, 15], fov: 60 }}
+      gl={{ antialias: false, powerPreference: "high-performance" }}
+      dpr={[1, 2]} // Limit pixel ratio for performance
+    >
       <color attach="background" args={['#000000']} />
-      <ambientLight intensity={0.5} />
-      <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
       
-      <Environment preset="studio" />
+      {/* Minimal lighting, mostly relying on emissive/shader colors */}
+      <ambientLight intensity={0.2} />
       
       <ScrollControls pages={4} damping={0.2}>
-        <HeroModel />
+        <ParticleVortex count={20000} />
         <Overlay />
       </ScrollControls>
 
-      <ContactShadows
-        position={[0, -2, 0]}
-        opacity={0.5}
-        scale={10}
-        blur={2}
-        far={4}
-        color="#ffffff"
-      />
+      {/* Post-processing for the SaaS Glow */}
+      <EffectComposer disableNormalPass>
+        <Bloom 
+          luminanceThreshold={0.2} 
+          mipmapBlur 
+          intensity={1.5} 
+          radius={0.8}
+        />
+      </EffectComposer>
     </Canvas>
   );
 }
